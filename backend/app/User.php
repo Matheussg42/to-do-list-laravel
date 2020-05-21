@@ -4,8 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
-class User extends Model
+class User extends Authenticatable implements JWTSubject
 {
     /**
      * The attributes that are mass assignable.
@@ -41,5 +45,29 @@ class User extends Model
             'email' => $fields['email'] ,
             'password' => Hash::make($fields['password']),
         ]);
+    }
+
+    public function login($credentials){
+        if (!$token = JWTAuth::attempt($credentials)) {
+            throw new \Exception('Credencias incorretas, verifique-as e tente novamente.', -404);
+        }
+        return $token;
+    }
+
+    public function logout($token){
+        if (!JWTAuth::invalidate($token)) {
+            throw new \Exception('Erro. Tente novamente.', -404);
+        }
+    }
+
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+    
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

@@ -15,3 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('register', 'UserController@store')->name('users.store');
+Route::post('login', 'UserController@login')->name('users.login');
+
+Route::group(['prefix' => 'v1', 'middleware' => 'jwt.verify'], function () {
+  Route::post('logout', 'UserController@logout')->name('users.logout');
+});
