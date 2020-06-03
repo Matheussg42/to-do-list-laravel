@@ -11,6 +11,6 @@ class TasksSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory('App\Tasks')->create();
     }
 }
