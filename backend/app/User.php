@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use JWTAuth;
+use Carbon\Carbon;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class User extends Authenticatable implements JWTSubject
@@ -48,7 +49,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function login($credentials){
-        if (!$token = JWTAuth::attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials, ['exp' => Carbon::now()->addDays(1)->timestamp])) {
             throw new \Exception('Credencias incorretas, verifique-as e tente novamente.', -404);
         }
         return $token;

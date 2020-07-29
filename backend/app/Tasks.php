@@ -24,9 +24,11 @@ class Tasks extends Model
             throw new \Exception('Lista não Encontrada', -404);
         }
 
-        if ($list['user_id'] !== $fields['user_id']) {
+        if ($list['user_id'] !== auth()->user()->id) {
             throw new \Exception('Esta Lista não pertence a este Usuário.', -403);
         }
+
+        $list->update(['status' => 0]);
 
         return $list->tasks()->create($fields); 
     }
@@ -45,15 +47,11 @@ class Tasks extends Model
     }
 
     public function tasksByList($listId){
-        $list = Auth()
+        $tasks = Auth()
         ->user()
-        ->tasklist()->find($listId);
-        
-        if (!$list) {
-            throw new \Exception('Lista não Encontrada', -404);
-        }
+        ->tasks()->where('list_id', '=', $listId)->get();
 
-        return $list->tasks;
+        return $tasks;
     }
 
     public function closeTask($id){
@@ -64,7 +62,12 @@ class Tasks extends Model
         ->user()
         ->tasklist()->find($task['list_id']);
 
-        $taskOpen = $list->tasks->where('status', 0);
+        $taskOpen = Auth()
+        ->user()
+        ->tasks()
+        ->where('list_id', '=', $task['list_id'])
+        ->where('status', 0)
+        ->get();
         
         if(count($taskOpen) === 0){
             $list->update(['status' => 1]);
@@ -83,8 +86,23 @@ class Tasks extends Model
     public function destroyTask($id)
     {
         $task = $this->show($id);
-
         $task->delete();
+
+        $list = Auth()
+        ->user()
+        ->tasklist()->find($task['list_id']);
+
+        $taskOpen = Auth()
+        ->user()
+        ->tasks()
+        ->where('list_id', '=', $task['list_id'])
+        ->where('status', 0)
+        ->get();
+        
+        if(count($taskOpen) === 0){
+            $list->update(['status' => 1]);
+        }
+
         return $task;
     }
 
