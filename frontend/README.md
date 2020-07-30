@@ -65,9 +65,9 @@ yarn start
 * Cadastro de Usuário
 * Login
 
-![](src/.assets/registro.gif)
+![](../.assets/registro.gif)
 
-![](src/.assets/login.gif)
+![](../.assets/login.gif)
 
 #### Tarefas
 
@@ -76,4 +76,4 @@ yarn start
 * Deletar Tarefa
 * Marcar tarefa
 
-![](src/.assets/tarefa.gif)
+![](../.assets/tarefa.gif)
