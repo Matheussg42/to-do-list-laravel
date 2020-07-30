@@ -12,7 +12,7 @@
 
     "@material-ui/core": "^4.9.9",
     "axios": "^0.19.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "react-icons": "^3.9.0",
     "react-router-dom": "^5.1.2"
   },
